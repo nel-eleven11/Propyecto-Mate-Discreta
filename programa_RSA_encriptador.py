@@ -1,7 +1,7 @@
 #Programa del proyecto RSA encriptador
 #Matemática Discreta UVG
 #Nelson García 22434
-#Brandon Reyes 22
+#Brandon Reyes 22992
 
 
 def funcion_calculan_n(p,q):
@@ -28,6 +28,7 @@ def funcion_verificar_mcd(mcd):
 
 
 def funcion_switch_letra_a_numero(letra):
+    numero = ""
     if(letra == "A"):
         numero = "00"
     elif(letra == "B"):
@@ -82,9 +83,61 @@ def funcion_switch_letra_a_numero(letra):
         numero = "25"                
     return numero
 
-def funcion_codificar_ecuacion(m):
-    pass
-
+def funcion_switch_numero_a_letra(numero):
+    letra = ""
+    if(numero == "00"):
+        letra = "A"
+    elif(numero == "01"):
+        letra = "B"  
+    elif(numero == "02"):
+        letra = "C"   
+    elif(numero == "03"):
+        letra = "D"   
+    elif(numero == "04"):
+        letra = "E"   
+    elif(numero == "05"):
+        letra = "F"   
+    elif(numero == "06"):
+        letra = "G"   
+    elif(numero == "07"):
+        letra = "H"   
+    elif(numero == "08"):
+        letra = "I"   
+    elif(numero == "09"):
+        letra = "J"   
+    elif(numero == "10"):
+        letra = "K"   
+    elif(numero == "11"):
+        letra = "L"   
+    elif(numero == "12"):
+        letra = "M"   
+    elif(numero == "13"):
+        letra = "N"   
+    elif(numero == "14"):
+        letra = "O"   
+    elif(numero == "15"):
+        letra = "P" 
+    elif(numero == "16"):
+        letra = "Q"    
+    elif(numero == "17"):
+        letra = "R"
+    elif(numero == "18"):
+        letra = "S"
+    elif(numero == "19"):
+        letra = "T"
+    elif(numero == "20"):
+        letra = "U"
+    elif(numero == "21"):
+        letra = "V"
+    elif(numero == "22"):
+        letra = "W"
+    elif(numero == "23"):
+        letra = "X"  
+    elif(numero == "24"):
+        letra = "Y"  
+    elif(numero == "25"):
+        letra = "Z"                
+    return letra
 
 def funcion_concartenar_pares(palabra):
     lista_numeros = []
@@ -98,10 +151,20 @@ def funcion_concartenar_pares(palabra):
     concatenadas = [a + b if b != '*' else a + b for a, b in zip(lista_cadenas[::2], lista_cadenas[1::2] + [''])]
     return concatenadas    
 
+def funcion_concartenar_pares_desencriptar(numeros):
+    lista_letras = []
+    
+    for numero in range(0,len(numeros)):
+        letra = funcion_switch_numero_a_letra(numeros[numero])
+        lista_letras.append(letra)
+    
+    concatenadas = ''.join(lista_letras)
+
+    return concatenadas
 
 def multiplicar_base_exponente_Euler(concatenadas, euler,n):
     
-    lista_de_cadenas = concatenadas#x
+    lista_de_cadenas = concatenadas
 
     lista_de_enteros = [int(cadena) for cadena in lista_de_cadenas]
 
@@ -113,29 +176,71 @@ def multiplicar_base_exponente_Euler(concatenadas, euler,n):
         lista_de_enterosEponente.append(x)
     return lista_de_enterosEponente
 
+def multiplicar_base_exponente_D(numeros, d,mod):
+    lista_de_enterosEponente = []
+    for i in range(0,len(numeros)):
+        x = (int(numeros[i])**d)%mod
+        lista_de_enterosEponente.append(str(x))
+    return lista_de_enterosEponente
+
 
 def funcion_resultado(lista_encriptada):
     # Convierte cada número a cadena y agrega ceros a la izquierda si es necesario
     lista_cadenas = [str(numero).zfill(4) for numero in lista_encriptada]
     return lista_cadenas
-    
+
+def euclides_extendido(a, b):
+    if a == 0:
+        return b, 0, 1
+    gcd, x1, y1 = euclides_extendido(b % a, a)
+    x = y1 - (b // a) * x1
+    y = x1
+    return gcd, x, y
+
+def inverso_modular(a, m):
+    gcd, x, _ = euclides_extendido(a, m)
+    if gcd != 1:
+        print("El inverso no existe porque a y m no son coprimos")
+    return x % m  
+
+def obtener_input_entero(mensaje):
+    while True:
+        try:
+            valor = int(input(mensaje))
+            return valor
+        except ValueError:
+            print("Por favor, ingrese un número entero.")
+
+def obtener_input_cadena(mensaje):
+    while True:
+        cadena = input(mensaje)
+        if cadena.isalpha():  
+            return cadena.upper()
+        else:
+            print("Por favor, ingrese solo caracteres alfabéticos.")
+
+def obtener_input_numerico_como_cadena(mensaje):
+    while True:
+        cadena = input(mensaje)
+        if cadena.isdigit(): 
+            return cadena
+        else:
+            print("Por favor, ingrese solo números.")
 
 def encriptar():
-    m = (input("(1) Ingrese el mesaje a encriptar: \n ->"))
+    m = (obtener_input_cadena("Ingrese el mensaje a encriptar: \n ->"))
     m = m.upper()
-    mCodificado = funcion_codificar_ecuacion(m)
 
-    p = int(input("(2) Ingrese el valor de p: \n ->"))
-    q = int(input("(3) Ingrese el valor de q: \n ->"))
+    p = int(obtener_input_entero("Ingrese el valor de p: \n ->"))
+    q = int(obtener_input_entero("Ingrese el valor de q: \n ->"))
 
     n = funcion_calculan_n(p,q)
-
     phi = funcion_calcular_Phi(p,q)
-    
     cond = False
     euler = 0
+
     while(cond==False):
-        euler = int(input("(4) Ingrese un valor de euler(e): \n ->"))
+        euler = int(obtener_input_entero("Ingrese el valor de euler(e): \n ->"))
         mcd = funcion_calcular_mcd(euler,phi)
         cond = funcion_verificar_mcd(mcd)
     
@@ -146,25 +251,62 @@ def encriptar():
     resultadoF = funcion_resultado(lista_encriptada)
 
     print("-------Resultado-------")
-    print("(1) N: "+str(n))
-    print("(2) phi: "+str(phi))
-    print("(3) euler: "+str(euler))
-    print("(4) LLave publica es: ("+str(euler)+", "+str(n)+")")
-    print("(5) Lista encriptada: "+str(lista_encriptada))
-    print("(6) El mensaje encriptado es: "+str(resultadoF))
+    print("N: "+str(n))
+    print("phi: "+str(phi))
+    print("euler: "+str(euler))
+    print("LLave publica es: ("+str(euler)+", "+str(n)+")")
+    print("El mensaje encriptado es: "+str(resultadoF))
 
 def desencriptar():
-    pass
+    m_ = (obtener_input_numerico_como_cadena("Ingrese el mensaje a desencriptar: \n ->"))
 
+    print("Ahora con N = p*q")
+    p = int(obtener_input_entero("Ingrese el valor de p: \n ->"))
+    q = int(obtener_input_entero("Ingrese el valor de q: \n ->"))
+    N = funcion_calculan_n(p,q)
+    phi = funcion_calcular_Phi(p,q)
+    mcd = 0
+    cond = False
+    while (cond == False):
+        e = int(obtener_input_entero("Ingrese el valor de e: \n ->"))
+        mcd = funcion_calcular_mcd(e,phi)
+        cond = funcion_verificar_mcd(mcd)
+    
+    d = inverso_modular(e,phi)
+
+    lista_numeros = []
+    for i in range(0,len(m_),4):
+        lista_numeros.append(m_[i:i+4])
+    
+    lista_desencriptada = multiplicar_base_exponente_D(lista_numeros, d,N)
+
+    lista_desencriptada = funcion_resultado(lista_desencriptada)
+    
+    lista_numeros_2 = []
+    for j in range(0,len(lista_desencriptada)):
+        for i in range(0,len(lista_desencriptada[j]),2):
+            lista_numeros_2.append(lista_desencriptada[j][i:i+2]) 
+    
+    resultadoF = funcion_concartenar_pares_desencriptar(lista_numeros_2)
+
+    print("-------Resultado-------")
+    print("N: "+str(N))
+    print("phi: "+str(phi))
+    print("LLave privada es: d = "+str(d))
+    print("Lista desencriptada: "+str(lista_desencriptada))
+    print("El mensaje desencriptado es: "+str(resultadoF))
+    
 print("-------Bienvenido al programa RSA encriptador-------")
 print("Elija una opcion: ")
 print("(1) Encriptar")
 print("(2) Desencriptar")
 print("(3) Salir")
 opcion = 0
-while(opcion!=1 and opcion!=2 and opcion!=3):
-    opcion = int(input("->"))
-    print("Opción no valida")
+while(opcion not in [1, 2, 3]):
+    opcion = obtener_input_entero("\n ->")
+    if((opcion not in [1, 2, 3])):
+        print("Ingrese una opcion valida")
+        opcion = 0
 if(opcion==1):
     print("-------Encriptar-------")
     encriptar()
