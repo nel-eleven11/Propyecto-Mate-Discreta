@@ -23,10 +23,6 @@ def funcion_verificar_mcd(eulerR):
     else:
         print("El MCD no es igual a 1")
 
-def funcion_ecuacion():
-    pass
-    #e·d ≡ 1(mod Euler)
-    #ed(x) +Euler(y) = 1
 
 def funcion_switch_letra_a_numero(letra):
     if(letra == "A"):
@@ -84,23 +80,7 @@ def funcion_switch_letra_a_numero(letra):
     return numero
 
 def funcion_codificar_ecuacion(m):
-    """
-    lista_numeros = []
-    palabra = m
-    for letra in range(0,len(palabra)):
-        numero = funcion_switch_letra_a_numero(palabra[letra])
-        lista_numeros.append(numero)
-    return lista_numeros
-        """
-        
-    palabra = m
-    lista_numeros = []
-
-    for letra in palabra:
-        numero = ord(letra.upper()) - ord('A')
-        lista_numeros.append(numero)
-    print("funcion_codificar_ecuacion")
-    print(lista_numeros)
+    pass
 
 
 def funcion_concartenar_pares(palabra):
@@ -109,25 +89,11 @@ def funcion_concartenar_pares(palabra):
     for letra in range(0,len(palabra)):
         numero = funcion_switch_letra_a_numero(palabra[letra])
         lista_numeros.append(numero)
-    #return lista_numeros
-    """
-    lista_numeros = []
-
-    # Obtener los números correspondientes a las letras, considerando -33 para espacios en blanco
-    for letra in palabra:
-        if letra == ' ':
-            numero = -33  # Utilizar -33 para representar espacios en blanco
-        else:
-            numero = ord(letra.upper()) - ord('A')
-        lista_numeros.append(numero)
-
-    print(lista_numeros)
-    """
 
     # Usar list comprehension para convertir cada elemento a cadena
     lista_cadenas = [str(numero) if numero != -33 else '*' for numero in lista_numeros]
 
-    print(lista_cadenas)
+    #print(lista_cadenas)
 
     # Concatenar cada par de índices sucesivos y manejar el último índice
     concatenadas = [a + b if b != '*' else a + b for a, b in zip(lista_cadenas[::2], lista_cadenas[1::2] + [''])]
@@ -145,10 +111,6 @@ def multiplicar_base_exponente_Euler(concatenadas, euler,n):
     # Convertir la lista de cadenas a una lista de enteros
     lista_de_enteros = [int(cadena) for cadena in lista_de_cadenas]
 
-    # Mostrar la lista resultante
-    print("---Impresion de listados enteros---")
-    print(lista_de_enteros)  # Salida: 
-    print("")
     euler = euler
     n = n
     lista_de_enterosEponente = []
@@ -156,17 +118,24 @@ def multiplicar_base_exponente_Euler(concatenadas, euler,n):
         x = (lista_de_enteros[i]**euler)%n
         lista_de_enterosEponente.append(x)
     return lista_de_enterosEponente
-    #print(lista_de_enterosEponente)
 
 
+def funcion_resultado(lista_encriptada):
+    # Convierte cada número a cadena y agrega ceros a la izquierda si es necesario
+    lista_cadenas = [str(numero).zfill(4) for numero in lista_encriptada]
+    return lista_cadenas
+    # Imprime la lista resultante
 
-m = (input("Ingres el mesaje: \n ->"))
+    #print(lista_cadenas)
+
+
+m = (input("(1) Ingres el mesaje: \n ->"))
 m = m.upper()
 mCodificado = funcion_codificar_ecuacion(m)
 
-p = int(input("Ingrese el valor de p: \n ->"))
-q = int(input("Ingrese el valor de q: \n ->"))
-euler = int(input("Ingrese un valor de euler(e): \n ->"))
+p = int(input("(2) Ingrese el valor de p: \n ->"))
+q = int(input("(3) Ingrese el valor de q: \n ->"))
+euler = int(input("(4) Ingrese un valor de euler(e): \n ->"))
 
 #paso 2
 n = funcion_calculan_n(p,q)
@@ -182,11 +151,17 @@ concatenadas = funcion_concartenar_pares(m)
 #la lista anterior concatenas en pares de dos, se multiplica por expoencial euler y (mod n) y devuelde encriptada
 lista_encriptada = multiplicar_base_exponente_Euler(concatenadas, euler,n)
 
+#dar formato al resukltado
+resultadoF = funcion_resultado(lista_encriptada)
+
+
 #-------- Resultado.-----------------
-print("N: "+str(n))
-print("phi: "+str(phi))
-print("eulerR: "+str(eulerR))
-print("Lalve publica es: ("+str(euler)+", "+str(n)+")")
-print("Lista encriptada: "+str(lista_encriptada))
+print("-------Resultado-------")
+print("(1) N: "+str(n))
+print("(2) phi: "+str(phi))
+print("(3) eulerR: "+str(eulerR))
+print("(4) Lalve publica es: ("+str(euler)+", "+str(n)+")")
+print("(5) Lista encriptada: "+str(lista_encriptada))
+print("(6) El mensaje encrptado es: "+str(resultadoF))
 
 
