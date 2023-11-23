@@ -28,17 +28,89 @@ def funcion_ecuacion():
     #e·d ≡ 1(mod Euler)
     #ed(x) +Euler(y) = 1
 
+def funcion_switch_letra_a_numero(letra):
+    if(letra == "A"):
+        numero = "00"
+    elif(letra == "B"):
+        numero = "01"  
+    elif(letra == "C"):
+        numero = "02"   
+    elif(letra == "D"):
+        numero = "03"   
+    elif(letra == "E"):
+        numero = "04"   
+    elif(letra == "F"):
+        numero = "05"   
+    elif(letra == "G"):
+        numero = "06"   
+    elif(letra == "H"):
+        numero = "07"   
+    elif(letra == "I"):
+        numero = "08"   
+    elif(letra == "J"):
+        numero = "09"   
+    elif(letra == "K"):
+        numero = "10"   
+    elif(letra == "L"):
+        numero = "11"   
+    elif(letra == "M"):
+        numero = "12"   
+    elif(letra == "N"):
+        numero = "13"   
+    elif(letra == "O"):
+        numero = "14"   
+    elif(letra == "P"):
+        numero = "15" 
+    elif(letra == "Q"):
+        numero = "16"    
+    elif(letra == "R"):
+        numero = "17"
+    elif(letra == "S"):
+        numero = "18"
+    elif(letra == "T"):
+        numero = "19"
+    elif(letra == "U"):
+        numero = "20"
+    elif(letra == "V"):
+        numero = "21"
+    elif(letra == "W"):
+        numero = "22"
+    elif(letra == "X"):
+        numero = "23"  
+    elif(letra == "Y"):
+        numero = "24"  
+    elif(letra == "Z"):
+        numero = "25"                
+    return numero
+
 def funcion_codificar_ecuacion(m):
+    """
+    lista_numeros = []
+    palabra = m
+    for letra in range(0,len(palabra)):
+        numero = funcion_switch_letra_a_numero(palabra[letra])
+        lista_numeros.append(numero)
+    return lista_numeros
+        """
+        
     palabra = m
     lista_numeros = []
 
     for letra in palabra:
         numero = ord(letra.upper()) - ord('A')
         lista_numeros.append(numero)
+    print("funcion_codificar_ecuacion")
     print(lista_numeros)
 
 
 def funcion_concartenar_pares(palabra):
+    lista_numeros = []
+    
+    for letra in range(0,len(palabra)):
+        numero = funcion_switch_letra_a_numero(palabra[letra])
+        lista_numeros.append(numero)
+    #return lista_numeros
+    """
     lista_numeros = []
 
     # Obtener los números correspondientes a las letras, considerando -33 para espacios en blanco
@@ -50,6 +122,7 @@ def funcion_concartenar_pares(palabra):
         lista_numeros.append(numero)
 
     print(lista_numeros)
+    """
 
     # Usar list comprehension para convertir cada elemento a cadena
     lista_cadenas = [str(numero) if numero != -33 else '*' for numero in lista_numeros]
@@ -60,6 +133,7 @@ def funcion_concartenar_pares(palabra):
     concatenadas = [a + b if b != '*' else a + b for a, b in zip(lista_cadenas[::2], lista_cadenas[1::2] + [''])]
     return concatenadas
     #print(concatenadas)
+    
 
 
 def multiplicar_base_exponente_Euler(concatenadas, euler,n):
@@ -76,6 +150,7 @@ def multiplicar_base_exponente_Euler(concatenadas, euler,n):
     print(lista_de_enteros)  # Salida: 
     print("")
     euler = euler
+    n = n
     lista_de_enterosEponente = []
     for i in range(0,len(lista_de_enteros)):
         x = (lista_de_enteros[i]**euler)%n
