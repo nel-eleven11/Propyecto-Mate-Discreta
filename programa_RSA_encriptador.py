@@ -1,27 +1,30 @@
-#Ultima modificación 23/11/2023
+#Programa del proyecto RSA encriptador
+#Matemática Discreta UVG
+#Nelson García 22434
+#Brandon Reyes 22
+
+
 def funcion_calculan_n(p,q):
-    #se calcula el modulo
     n = q*p
     return n
 
 def funcion_calcular_Phi(p,q):
-    #se calcula euler
     phi = (p-1)*(q-1)
     return phi
 
-def funcion_calcular_d(euler,phi):
-    # mdc entre d y euler sea igual a 1 || mdc(d,e)=1
-    #d existen varios valores, se elige
+def funcion_calcular_mcd(euler,phi):
     while phi:
         euler, phi = phi, euler % phi
     return euler
 
-def funcion_verificar_mcd(eulerR):
-    if(eulerR==1):
+def funcion_verificar_mcd(mcd):
+    cond = True
+    if(mcd==1):
         print("El MCD es igual a 1")
-
     else:
         print("El MCD no es igual a 1")
+        cond = False
+    return cond
 
 
 def funcion_switch_letra_a_numero(letra):
@@ -90,25 +93,16 @@ def funcion_concartenar_pares(palabra):
         numero = funcion_switch_letra_a_numero(palabra[letra])
         lista_numeros.append(numero)
 
-    # Usar list comprehension para convertir cada elemento a cadena
     lista_cadenas = [str(numero) if numero != -33 else '*' for numero in lista_numeros]
 
-    #print(lista_cadenas)
-
-    # Concatenar cada par de índices sucesivos y manejar el último índice
     concatenadas = [a + b if b != '*' else a + b for a, b in zip(lista_cadenas[::2], lista_cadenas[1::2] + [''])]
-    return concatenadas
-    #print(concatenadas)
-    
+    return concatenadas    
 
 
 def multiplicar_base_exponente_Euler(concatenadas, euler,n):
     
-
-    # Lista de cadenas que representan números
     lista_de_cadenas = concatenadas#x
 
-    # Convertir la lista de cadenas a una lista de enteros
     lista_de_enteros = [int(cadena) for cadena in lista_de_cadenas]
 
     euler = euler
@@ -124,44 +118,60 @@ def funcion_resultado(lista_encriptada):
     # Convierte cada número a cadena y agrega ceros a la izquierda si es necesario
     lista_cadenas = [str(numero).zfill(4) for numero in lista_encriptada]
     return lista_cadenas
-    # Imprime la lista resultante
+    
 
-    #print(lista_cadenas)
+def encriptar():
+    m = (input("(1) Ingrese el mesaje a encriptar: \n ->"))
+    m = m.upper()
+    mCodificado = funcion_codificar_ecuacion(m)
 
+    p = int(input("(2) Ingrese el valor de p: \n ->"))
+    q = int(input("(3) Ingrese el valor de q: \n ->"))
 
-m = (input("(1) Ingres el mesaje: \n ->"))
-m = m.upper()
-mCodificado = funcion_codificar_ecuacion(m)
+    n = funcion_calculan_n(p,q)
 
-p = int(input("(2) Ingrese el valor de p: \n ->"))
-q = int(input("(3) Ingrese el valor de q: \n ->"))
-euler = int(input("(4) Ingrese un valor de euler(e): \n ->"))
+    phi = funcion_calcular_Phi(p,q)
+    
+    cond = False
+    euler = 0
+    while(cond==False):
+        euler = int(input("(4) Ingrese un valor de euler(e): \n ->"))
+        mcd = funcion_calcular_mcd(euler,phi)
+        cond = funcion_verificar_mcd(mcd)
+    
+    concatenadas = funcion_concartenar_pares(m)
 
-#paso 2
-n = funcion_calculan_n(p,q)
-#paso 3
-phi = funcion_calcular_Phi(p,q)
-#llave publica
-eulerR = funcion_calcular_d(euler,n)#phi)
-funcion_verificar_mcd(eulerR)
+    lista_encriptada = multiplicar_base_exponente_Euler(concatenadas, euler,n)
 
-#trasncribir palabra a digitos y concatenar en pares
-concatenadas = funcion_concartenar_pares(m)
+    resultadoF = funcion_resultado(lista_encriptada)
 
-#la lista anterior concatenas en pares de dos, se multiplica por expoencial euler y (mod n) y devuelde encriptada
-lista_encriptada = multiplicar_base_exponente_Euler(concatenadas, euler,n)
+    print("-------Resultado-------")
+    print("(1) N: "+str(n))
+    print("(2) phi: "+str(phi))
+    print("(3) euler: "+str(euler))
+    print("(4) LLave publica es: ("+str(euler)+", "+str(n)+")")
+    print("(5) Lista encriptada: "+str(lista_encriptada))
+    print("(6) El mensaje encriptado es: "+str(resultadoF))
 
-#dar formato al resukltado
-resultadoF = funcion_resultado(lista_encriptada)
+def desencriptar():
+    pass
 
-
-#-------- Resultado.-----------------
-print("-------Resultado-------")
-print("(1) N: "+str(n))
-print("(2) phi: "+str(phi))
-print("(3) eulerR: "+str(eulerR))
-print("(4) Lalve publica es: ("+str(euler)+", "+str(n)+")")
-print("(5) Lista encriptada: "+str(lista_encriptada))
-print("(6) El mensaje encrptado es: "+str(resultadoF))
-
+print("-------Bienvenido al programa RSA encriptador-------")
+print("Elija una opcion: ")
+print("(1) Encriptar")
+print("(2) Desencriptar")
+print("(3) Salir")
+opcion = 0
+while(opcion!=1 and opcion!=2 and opcion!=3):
+    opcion = int(input("->"))
+    print("Opción no valida")
+if(opcion==1):
+    print("-------Encriptar-------")
+    encriptar()
+elif(opcion==2):
+    print("-------Desencriptar-------")
+    desencriptar()
+else:   
+    print("-------Salir-------")
+    exit()
 
