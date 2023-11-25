@@ -143,8 +143,13 @@ def funcion_concartenar_pares(palabra):
     lista_numeros = []
     
     for letra in range(0,len(palabra)):
-        numero = funcion_switch_letra_a_numero(palabra[letra])
-        lista_numeros.append(numero)
+        if palabra[letra] != " ":
+            numero = funcion_switch_letra_a_numero(palabra[letra])
+            lista_numeros.append(numero)
+        else:
+            continue
+    if(len(lista_numeros)%2!=0):
+        lista_numeros.append("23")
 
     lista_cadenas = [str(numero) if numero != -33 else '*' for numero in lista_numeros]
 
@@ -185,7 +190,6 @@ def multiplicar_base_exponente_D(numeros, d,mod):
 
 
 def funcion_resultado(lista_encriptada):
-    # Convierte cada número a cadena y agrega ceros a la izquierda si es necesario
     lista_cadenas = [str(numero).zfill(4) for numero in lista_encriptada]
     return lista_cadenas
 
@@ -212,12 +216,26 @@ def obtener_input_entero(mensaje):
             print("Por favor, ingrese un número entero.")
 
 def obtener_input_cadena(mensaje):
+    cond = False
     while True:
         cadena = input(mensaje)
-        if cadena.isalpha():  
-            return cadena.upper()
+        cadena = cadena.upper()
+        lista = list(cadena)
+        lista = [x for x in lista if x != " "]
+        for i in lista:
+            if i.isalpha():
+                if(i in ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"]):
+                    cond = True
+                else:
+                    cond = False
+                    print("Por favor, ingrese solo letras del alfabeto inglés.")
+            else:
+                cond = False
+                print("Por favor, ingrese solo caracteres alfabéticos.")
+        if(cond==True):
+            return cadena 
         else:
-            print("Por favor, ingrese solo caracteres alfabéticos.")
+            break
 
 def obtener_input_numerico_como_cadena(mensaje):
     while True:
@@ -227,12 +245,32 @@ def obtener_input_numerico_como_cadena(mensaje):
         else:
             print("Por favor, ingrese solo números.")
 
+def es_primo(numero):
+    contador = 0
+    for i in range(1, numero + 1):
+        if i == 1 or i == numero:
+            continue
+        if numero % i == 0:
+            contador += 1
+    if contador == 0:
+        return True
+    else:
+        return False
+
 def encriptar():
     m = (obtener_input_cadena("Ingrese el mensaje a encriptar: \n ->"))
-    m = m.upper()
 
     p = int(obtener_input_entero("Ingrese el valor de p: \n ->"))
+
+    while(es_primo(p)==False):
+        print("El valor de p no es primo")
+        p = int(obtener_input_entero("Ingrese el valor de p: \n ->"))
+
     q = int(obtener_input_entero("Ingrese el valor de q: \n ->"))
+
+    while(es_primo(q)==False):
+        print("El valor de q no es primo")
+        q = int(obtener_input_entero("Ingrese el valor de q: \n ->"))
 
     n = funcion_calculan_n(p,q)
     phi = funcion_calcular_Phi(p,q)
@@ -245,7 +283,7 @@ def encriptar():
         cond = funcion_verificar_mcd(mcd)
     
     concatenadas = funcion_concartenar_pares(m)
-
+    print(concatenadas)
     lista_encriptada = multiplicar_base_exponente_Euler(concatenadas, euler,n)
 
     resultadoF = funcion_resultado(lista_encriptada)
@@ -255,14 +293,25 @@ def encriptar():
     print("phi: "+str(phi))
     print("euler: "+str(euler))
     print("LLave publica es: ("+str(euler)+", "+str(n)+")")
+    print("Lista encriptada: "+str(lista_encriptada))
     print("El mensaje encriptado es: "+str(resultadoF))
 
 def desencriptar():
-    m_ = (obtener_input_numerico_como_cadena("Ingrese el mensaje a desencriptar: \n ->"))
+    m_ = (obtener_input_numerico_como_cadena("Ingrese el mensaje a desencriptar, todo junto por favor: \n ->"))
 
     print("Ahora con N = p*q")
     p = int(obtener_input_entero("Ingrese el valor de p: \n ->"))
+
+    while(es_primo(p)==False):
+        print("El valor de p no es primo")
+        p = int(obtener_input_entero("Ingrese el valor de p: \n ->"))
+
     q = int(obtener_input_entero("Ingrese el valor de q: \n ->"))
+
+    while(es_primo(q)==False):
+        print("El valor de q no es primo")
+        q = int(obtener_input_entero("Ingrese el valor de q: \n ->"))
+
     N = funcion_calculan_n(p,q)
     phi = funcion_calcular_Phi(p,q)
     mcd = 0
